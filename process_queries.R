@@ -21,10 +21,10 @@ BI_LAMBDA=0.16
 UNI_LAMBDA=0.05
 
 
-first_word<-"of"
-second_word<-"groceries"
-third_word<-"in"
-fourth_word<-"each"
+first_word<-"one"
+second_word<-"two"
+third_word<-"three"
+fourth_word<-"four"
 
 
 #head(filter(quint_df,first==first_word,second==second_word,third==third_word,fourth==fourth_word))
