@@ -3,7 +3,7 @@ library(shiny)
 library(dplyr)
 
 
-PATH="final/en_US/samples100/"
+PATH="data/"
 QUINTRDAFILE= paste(PATH,"quint_df.rda",sep="")
 QUADRDAFILE= paste(PATH,"quad_df.rda",sep="")
 TRIRDAFILE= paste(PATH,"tri_df.rda",sep="")
@@ -39,34 +39,34 @@ shinyServer(
       f<-filter(quint_df,first==input$first_word,second==input$second_word,
                           third==input$third_word,fourth==input$fourth_word)
       if (nrow(f)==0) {
-        results<-rbind(results,data.frame(word="",percent=0.0))
+        results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
-        results<-rbind(results,data.frame(word=f[1,5],percent=as.numeric(f[1,6])/sum(f$count)*QUINT_LAMBDA))
+        results<-rbind(results,data.frame(word=f[1,5],percent=as.numeric(f[1,6])/sum(f$count)*QUINT_LAMBDA,stringsAsFactors=FALSE))
       }
       
       
       f<-filter(quad_df,first==input$second_word,second==input$third_word,third==input$fourth_word)
       if (nrow(f)==0) {
-        results<-rbind(results,data.frame(word="",percent=0.0))
+        results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
-        results<-rbind(results,data.frame(word=f[1,4],percent=as.numeric(f[1,5])/sum(f$count)*QUAD_LAMBDA))
+        results<-rbind(results,data.frame(word=f[1,4],percent=as.numeric(f[1,5])/sum(f$count)*QUAD_LAMBDA,stringsAsFactors=FALSE))
       }
       
       
       f<-filter(tri_df,first==input$third_word,second==input$fourth_word)
       if (nrow(f)==0) {
-        results<-rbind(results,data.frame(word="",percent=0.0))
+        results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
-        results<-rbind(results,data.frame(word=f[1,3],percent=as.numeric(f[1,4])/sum(f$count)*TRI_LAMBDA))
+        results<-rbind(results,data.frame(word=f[1,3],percent=as.numeric(f[1,4])/sum(f$count)*TRI_LAMBDA,stringsAsFactors=FALSE))
       }
       
       
       
       f<-filter(bi_df,first==input$fourth_word)
       if (nrow(f)==0) {
-        results<-rbind(results,data.frame(word="",percent=0.0))
+        results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
-        results<-rbind(results,data.frame(word=f[1,2],percent=as.numeric(f[1,3])/sum(f$count)*BI_LAMBDA))
+        results<-rbind(results,data.frame(word=f[1,2],percent=as.numeric(f[1,3])/sum(f$count)*BI_LAMBDA,stringsAsFactors=FALSE))
       }
       
       
@@ -94,58 +94,6 @@ shinyServer(
   })
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    #     
-    #     
-    #     singleNnetFit<-reactive({nnet(trainingData, solTrainY, size = input$numHiddenNodes, decay = input$inputDecay,
-    #                                   linout = TRUE, trace = FALSE, maxit = 500, 
-    #                                   MaxNWts = input$numHiddenNodes * (ncol(trainingData) + 1) + input$numHiddenNodes + 1)})
-    #     
-    #     
-    #     singleNnetPred<-reactive({predict(singleNnetFit(), testingData)})
-    #     singleNnetSummary<-reactive({defaultSummary(data.frame(obs=solTestY, pred=singleNnetPred()))})
-    #     
-    #     
-    #     averageNnetFit<-reactive({avNNet(trainingData, solTrainY, size = input$numHiddenNodes, decay = input$inputDecay, repeats = input$numModels,
-    #                                      linout = TRUE, trace = FALSE, maxit = 500, 
-    #                                      MaxNWts = input$numHiddenNodes * (ncol(trainingData) + 1) + input$numHiddenNodes + 1)})
-    #     
-    #     
-    #     averageNnetPred<-reactive({predict(averageNnetFit(), testingData)})
-    #     averageNnetSummary<-reactive({defaultSummary(data.frame(obs=solTestY, pred=averageNnetPred()))})
-    #     
-    #     
-    #     
-    #     
-    #     output$lmRMSE <- renderPrint({lmSummary[1]})
-    #     output$lmRSquared <- renderPrint({lmSummary[2]})
-    #     
-    #     output$singleNnetRMSE <- renderPrint({as.data.frame(singleNnetSummary())[1,1]})
-    #     output$singleNnetRSquared <- renderPrint({as.data.frame(singleNnetSummary())[2,1]})
-    #     
-    #     output$averageNnetRMSE <- renderPrint({as.data.frame(averageNnetSummary())[1,1]})
-    #     output$averageNnetRSquared <- renderPrint({as.data.frame(averageNnetSummary())[2,1]})
-    #     
-    #     lmResids<-lmPred-solTestY
-    #     output$lmResids<- renderPlot({plot(lmResids)})
-    #     
-    #     singleResids<-reactive(singleNnetPred()-solTestY)
-    #     output$singleNnetResids<- renderPlot({plot(singleResids())})
-    #     
-    #     averageResids<-reactive(averageNnetPred()-solTestY)
-    #     output$averageNnetResids<- renderPlot({plot(averageResids())})
+
     
     

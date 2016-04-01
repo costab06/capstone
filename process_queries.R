@@ -1,7 +1,7 @@
 library(dplyr)
 
 
-PATH="final/en_US/samples100/"
+PATH="data/"
 QUINTRDAFILE= paste(PATH,"quint_df.rda",sep="")
 QUADRDAFILE= paste(PATH,"quad_df.rda",sep="")
 TRIRDAFILE= paste(PATH,"tri_df.rda",sep="")
@@ -37,38 +37,38 @@ results<-data.frame(word=character(),percent=double(),stringsAsFactors=FALSE)
 
 f<-filter(quint_df,first==first_word,second==second_word,third==third_word,fourth==fourth_word)
 if (nrow(f)==0) {
-	results<-rbind(results,data.frame(word="",percent=0.0))
+	results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
 } else {
-	results<-rbind(results,data.frame(word=f[1,5],percent=as.numeric(f[1,6])/sum(f$count)*QUINT_LAMBDA))
+	results<-rbind(results,data.frame(word=f[1,5],percent=as.numeric(f[1,6])/sum(f$count)*QUINT_LAMBDA,stringsAsFactors=FALSE))
 }
 
 
 f<-filter(quad_df,first==second_word,second==third_word,third==fourth_word)
 if (nrow(f)==0) {
-	results<-rbind(results,data.frame(word="",percent=0.0))
+	results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
 } else {
-	results<-rbind(results,data.frame(word=f[1,4],percent=as.numeric(f[1,5])/sum(f$count)*QUAD_LAMBDA))
+	results<-rbind(results,data.frame(word=f[1,4],percent=as.numeric(f[1,5])/sum(f$count)*QUAD_LAMBDA,stringsAsFactors=FALSE))
 }
 
 
 f<-filter(tri_df,first==third_word,second==fourth_word)
 if (nrow(f)==0) {
-	results<-rbind(results,data.frame(word="",percent=0.0))
+	results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
 } else {
-	results<-rbind(results,data.frame(word=f[1,3],percent=as.numeric(f[1,4])/sum(f$count)*TRI_LAMBDA))
+	results<-rbind(results,data.frame(word=f[1,3],percent=as.numeric(f[1,4])/sum(f$count)*TRI_LAMBDA,stringsAsFactors=FALSE))
 }
 
 
 
 f<-filter(bi_df,first==fourth_word)
 if (nrow(f)==0) {
-	results<-rbind(results,data.frame(word="",percent=0.0))
+	results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
 } else {
-	results<-rbind(results,data.frame(word=f[1,2],percent=as.numeric(f[1,3])/sum(f$count)*BI_LAMBDA))
+	results<-rbind(results,data.frame(word=f[1,2],percent=as.numeric(f[1,3])/sum(f$count)*BI_LAMBDA,stringsAsFactors=FALSE))
 }
 
 
-results<-rbind(results,data.frame(word="the",percent=0.0367*UNI_LAMBDA))
+results<-rbind(results,data.frame(word="the",percent=0.0367*UNI_LAMBDA,stringsAsFactors=FALSE))
 
 
 
