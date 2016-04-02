@@ -34,10 +34,36 @@ shinyServer(
       
       
       results<-data.frame(word=character(),percent=double(),stringsAsFactors=FALSE)
+      fourth_word<-""
+      third_word<-""
+      second_word<-""
+      first_word<-""
+      
+      words <- strsplit(input$sentence, " ")[[1]]
+      str(words)
+      words_length<-length(words)
+      cat(words_length)
+      
+      if (words_length >= 1) {
+        fourth_word<-words[words_length]
+        if (words_length >=2)
+          third_word<-words[words_length-1]
+        if (words_length >=3)
+          second_word<-words[words_length-2]
+        if (words_length >=4)
+          first_word<-words[words_length-3]
+      } else {
+        ## ERROR
+        }
       
       
-      f<-filter(quint_df,first==input$first_word,second==input$second_word,
-                          third==input$third_word,fourth==input$fourth_word)
+          
+        
+        
+        
+     
+      f<-filter(quint_df,first==first_word,second==second_word,
+                          third==third_word,fourth==fourth_word)
       if (nrow(f)==0) {
         results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
@@ -45,7 +71,7 @@ shinyServer(
       }
       
       
-      f<-filter(quad_df,first==input$second_word,second==input$third_word,third==input$fourth_word)
+      f<-filter(quad_df,first==second_word,second==third_word,third==fourth_word)
       if (nrow(f)==0) {
         results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
@@ -53,7 +79,7 @@ shinyServer(
       }
       
       
-      f<-filter(tri_df,first==input$third_word,second==input$fourth_word)
+      f<-filter(tri_df,first==third_word,second==fourth_word)
       if (nrow(f)==0) {
         results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {
@@ -62,7 +88,7 @@ shinyServer(
       
       
       
-      f<-filter(bi_df,first==input$fourth_word)
+      f<-filter(bi_df,first==fourth_word)
       if (nrow(f)==0) {
         results<-rbind(results,data.frame(word="",percent=0.0,stringsAsFactors=FALSE))
       } else {

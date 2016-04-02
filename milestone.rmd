@@ -1,0 +1,174 @@
+---
+title: "Word Prediction - Milestone Report"
+author: "Brian Costa"
+date: "March 20, 2016"
+output: html_document
+---
+
+
+
+
+## Summary
+This SwiftKey capstone project involves word, or n-gram, prediction using a model based on a corpus of 3 documents.  The corpus includes english blogs, twitter output, and news articles provided by SwiftKey.
+
+Since the overall objective seems to be to predict the next word, regardless of medium, I combined the three types of documents into one corpus.  The documents are large so I started with a 1% random sample from each.  The following perl code was used to extract the sample.  (from http://stackoverflow.com/questions/22261082/load-a-small-random-sample-from-a-large-csv-file-into-r-data-frame)
+
+```
+perl -ne 'print if (rand() < .01)' biglist.txt > subset.txt
+```
+
+
+This is what the original files and the samples look like in terms of size and number of lines
+
+```
+$ ls -l
+total 569424
+-rw-r--r-- 1 Brian 197609 210160014 Mar  9 18:50 en_US.blogs.txt
+-rw-r--r-- 1 Brian 197609 205811889 Mar  9 18:50 en_US.news.txt
+-rw-r--r-- 1 Brian 197609 167105338 Mar  9 18:50 en_US.twitter.txt
+$
+
+$ wc -l *.txt
+   899288 en_US.blogs.txt
+  1010242 en_US.news.txt
+  2360148 en_US.twitter.txt
+$
+
+
+$ wc -l *.txt
+   8992 en_US.blogs.sample.txt
+  10145 en_US.news.sample.txt
+  23408 en_US.twitter.sample.txt
+  42545 total
+$
+```
+
+
+
+
+## Corpus Creation
+The sample files are combined into one corpus, the corpus is manipulated to make it more usable.  I decided to leave the stop words in since this is concerning predicting the next word and the stopword list are the most probably next words...
+
+
+
+
+```{r}
+library(ggplot2)
+library(tm)
+#library(RWeka)
+library(wordcloud)
+
+
+# create a corpus
+corp  <-Corpus(DirSource("final/en_US/samples"), readerControl = list(language="lat"))
+#summary(corp)  
+corp <- tm_map(corp, content_transformer(removeNumbers))
+corp <- tm_map(corp, content_transformer(removePunctuation))
+corp <- tm_map(corp, content_transformer(stripWhitespace))
+corp <- tm_map(corp, content_transformer(tolower))
+#corp <- tm_map(corp, removeWords, stopwords("english")) 
+corp <- tm_map(corp, stemDocument, language = "english") 
+
+```
+
+## DTM Creation for Individual Words
+
+From the corpus a DTM is created in order to gather some statistics about the frequency of occurrence of individual words in the corpus.
+
+A DTM is a transposed TDM, DTM seemed more suitable for this
+
+```{r}
+
+# create a DTM
+
+dtm <-DocumentTermMatrix(corp) 
+dtm <- removeSparseTerms(dtm, 0.75)
+
+#inspect(dtm) 
+
+# find terms with a frequency higher than 100
+#findFreqTerms(dtm, lowfreq=100) 
+
+# take colsums (occurrences across docuemnts), sort decreasing and see what we have
+dtm2<-as.matrix(dtm)
+frequency<-colSums(dtm2)
+frequency <- sort(frequency, decreasing=TRUE)
+head(frequency)
+```
+
+## Wordcloud and Plots of Word Occurrences
+
+A wordcloud of the top 100 words and a plot of the words having more than 3000 occurrences accross the three documents
+
+
+```{r}
+
+words <- names(frequency)
+wordcloud(words[1:100], frequency[1:100])
+wf <- data.frame(word=names(frequency), freq=frequency)
+p <- ggplot(subset(wf, freq>3000), aes(word, freq))    
+p <- p + geom_bar(stat="identity")   
+p <- p + theme(axis.text.x=element_text(angle=45, hjust=1))   
+p
+
+```
+
+
+## Bigrams and Trigrams
+
+After experimenting with bi and tri-grams in this corpus for a while (with and without the inclusion of the stopwords) I suceeded in breaking Java on this machine causing the loading of RWeka to crash R before I was able to publish it.  Below is the commented out code.  I need another day or so to figure out what happened.  The coading approach was the same as for single words - sorted counts, word clouds, and plots.  
+
+
+```{r}
+
+#BigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = 2, max = 2))
+#bi_tdm <- TermDocumentMatrix(corp, control = list(tokenize = BigramTokenizer))
+#bi_tdm <- removeSparseTerms(bi_tdm, 0.75)
+#inspect(bi_tdm[1:3,1:3])
+
+#findFreqTerms(bi_tdm, lowfreq=100) # find n-grams with a frequency higher than 100
+
+#bi_tdm2<-as.matrix(bi_tdm)
+#frequency<-rowSums(bi_tdm2)
+#frequency <- sort(frequency, decreasing=TRUE)
+#head(frequency)
+
+#words <- names(frequency)
+#wordcloud(words[1:10], frequency[1:10])
+
+#p <- ggplot(subset(wf, freq>3000), aes(word, freq))    
+#p <- p + geom_bar(stat="identity")   
+#p <- p + theme(axis.text.x=element_text(angle=45, hjust=1))   
+#p
+
+
+
+
+#TrigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = 3, max = 3))
+#tri_tdm <- TermDocumentMatrix(corp, control = list(tokenize = TrigramTokenizer))
+#tri_tdm <- removeSparseTerms(tri_tdm, 0.75)
+#inspect(tdm[1:3,1:3])
+
+#findFreqTerms(tri_tdm, lowfreq=100) # find n-grams with a frequency higher than 100
+
+#tri_tdm2<-as.matrix(tri_tdm)
+#frequency<-rowSums(tri_tdm2)
+#frequency <- sort(frequency, decreasing=TRUE)
+#head(frequency)
+
+#words <- names(frequency)
+#wordcloud(words[1:10], frequency[1:10])
+
+#p <- ggplot(subset(wf, freq>3000), aes(word, freq))    
+#p <- p + geom_bar(stat="identity")   
+#p <- p + theme(axis.text.x=element_text(angle=45, hjust=1))   
+#p
+
+```
+
+
+## Final Prediction Approach
+
+Since this is only 1% of the data and takes a while to process I may try tau which has better multi-core support.  Once the n-grams are constructed then building either Markov chains, or simply dataframes, to allow the selection of the highest probability "third word" given a matching first and second word.  I need to understand Markov chains better - since we are not actually concerned with generating a distributon of suggestions I'm not sure they are necessary for this assignment.  I also need to understand using the J48 models and how they fit in with this project.  Lots to learn.
+
+

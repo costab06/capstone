@@ -2,10 +2,8 @@ shinyUI(
   pageWithSidebar(
     headerPanel("Next Word Prediction"),
     sidebarPanel(
-      textInput("first_word", "First word in the sequence", "first"),
-      textInput("second_word", "Second word in the sequence", "second"),
-      textInput("third_word", "Third word in the sequence", "third"),
-      textInput("fourth_word", "Fourth word in the sequence", "fourth"),
+      textInput("sentence", "Type in the sentence to complete", "In the morning I drink"),
+      
       
       #     checkboxGroupInput("checkBoxValue","Checkbox",
       #                        c("Value 1" = "1",
@@ -35,7 +33,7 @@ from the 2-gram dataframe."),
                 p("This approach is known as \"Stupid Backoff\".  Use of ngrams and \"Stupid Backoff\" is really the first step in trying to solve this problem.
 From working with the corpus it quickly becomes apparent htat there is a need to include some form of grammer modelling as well as semantic modelling with this approach.  
 Language is based on gramatical and semantic patterns, not really on simple ngram patterns."),
-                p(), p("Enter 4 words in the sequence and click \"Predict!\"")),
+                p(), p("Enter the start of the sentence and click \"Predict!\"")),
         
         tabPanel("Results",
                  

@@ -21,10 +21,31 @@ BI_LAMBDA=0.16
 UNI_LAMBDA=0.05
 
 
-first_word<-"one"
-second_word<-"two"
-third_word<-"three"
-fourth_word<-"four"
+input_sentence = "jury to settle the"
+
+
+fourth_word<-""
+third_word<-""
+second_word<-""
+first_word<-""
+
+words <- strsplit(input_sentence, " ")[[1]]
+str(words)
+words_length<-length(words)
+cat(words_length)
+
+if (words_length >= 1) {
+  fourth_word<-words[words_length]
+  if (words_length >=2)
+    third_word<-words[words_length-1]
+  if (words_length >=3)
+    second_word<-words[words_length-2]
+  if (words_length >=4)
+    first_word<-words[words_length-3]
+}
+
+
+
 
 
 #head(filter(quint_df,first==first_word,second==second_word,third==third_word,fourth==fourth_word))
