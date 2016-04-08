@@ -2,7 +2,7 @@ shinyUI(
   pageWithSidebar(
     headerPanel("Next Word Prediction"),
     sidebarPanel(
-      textInput("sentence", "Type in the beginning of the sentence", "construction would likely"),
+      textInput("sentence", "Type in the beginning of the sentence", "definitely not make the"),
       
       
       #     checkboxGroupInput("checkBoxValue","Checkbox",

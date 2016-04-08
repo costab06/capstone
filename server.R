@@ -66,7 +66,9 @@ shinyServer(
         results<-rbind(results,data.frame(word=quint_f[1,5],percent=as.numeric(quint_f[1,6])/sum(quint_f$count)*QUINT_LAMBDA,stringsAsFactors=FALSE))
         output$quintcloud<- renderPlot({wordcloud(quint_f$fifth, quint_f$count,min.freq=0,max.words=10,scale=c(8,2))})
         quint_f<-arrange(quint_f,desc(count))
-        quint_f<-quint_f[1:10,]
+        if(nrow(quint_f) > 10) {
+            quint_f<-quint_f[1:10,]
+        }
         output$quintplot<- renderPlot({ggplot(quint_f, aes(fifth, count)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle=45, hjust=1)) })
       }
       
@@ -86,7 +88,9 @@ shinyServer(
         results<-rbind(results,data.frame(word=quad_f[1,4],percent=as.numeric(quad_f[1,5])/sum(quad_f$count)*QUAD_LAMBDA,stringsAsFactors=FALSE))
         output$quadcloud<- renderPlot({wordcloud(quad_f$fourth, quad_f$count,min.freq=0,max.words=10,scale=c(8,2))})
         quad_f<-arrange(quad_f,desc(count))
-        quad_f<-quad_f[1:10,]
+        if(nrow(quad_f) > 10) {
+            quad_f<-quad_f[1:10,]
+        }
         output$quadplot<- renderPlot({ggplot(quad_f, aes(fourth, count)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle=45, hjust=1)) })       
         
         
@@ -109,7 +113,9 @@ shinyServer(
         results<-rbind(results,data.frame(word=tri_f[1,3],percent=as.numeric(tri_f[1,4])/sum(tri_f$count)*TRI_LAMBDA,stringsAsFactors=FALSE))
         output$tricloud<- renderPlot({wordcloud(tri_f$third, tri_f$count,min.freq=0,max.words=10,scale=c(8,2))})
         tri_f<-arrange(tri_f,desc(count))
-        tri_f<-tri_f[1:10,]
+        if(nrow(tri_f) > 10) {
+            tri_f<-tri_f[1:10,]
+        }
         output$triplot<- renderPlot({ggplot(tri_f, aes(third, count)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle=45, hjust=1)) })       
       }
       
@@ -131,7 +137,9 @@ shinyServer(
         results<-rbind(results,data.frame(word=bi_f[1,2],percent=as.numeric(bi_f[1,3])/sum(bi_f$count)*BI_LAMBDA,stringsAsFactors=FALSE))
         output$bicloud<- renderPlot({wordcloud(bi_f$second, bi_f$count,min.freq=0,max.words=10,scale=c(8,2))})
         bi_f<-arrange(bi_f,desc(count))
-        bi_f<-bi_f[1:10,]
+        if(nrow(bi_f) > 10) {
+            bi_f<-bi_f[1:10,]
+        }
         output$biplot<- renderPlot({ggplot(bi_f, aes(second, count)) + geom_bar(stat="identity") + theme(axis.text.x=element_text(angle=45, hjust=1))}) 
       }
       
