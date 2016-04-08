@@ -141,9 +141,9 @@ results<-arrange(results,desc(percent))
 
 
 results
+f<-f[1:10]
 
-
-p<-ggplot(subset(f, count>1), aes(third, count))    
+p<-ggplot(f, aes(third, count))    
 p<-p + geom_bar(stat="identity")   
 p<-p + theme(axis.text.x=element_text(angle=45, hjust=1))   
 p

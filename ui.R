@@ -2,7 +2,7 @@ shinyUI(
   pageWithSidebar(
     headerPanel("Next Word Prediction"),
     sidebarPanel(
-      textInput("sentence", "Type in the sentence to complete", "construction would likely"),
+      textInput("sentence", "Type in the beginning of the sentence", "construction would likely"),
       
       
       #     checkboxGroupInput("checkBoxValue","Checkbox",
@@ -21,19 +21,21 @@ shinyUI(
       tabsetPanel (
         tabPanel("Introduction",
                  p(),p("This application uses a corpus of text from news, blogs and twitter feeds (the SwiftKey corpus) to predict
-            the next word in a sequence of words."),
-                 p("The model uses 100% of the corpus, creates dataframes with ngrams from size 1 to 5 with counts of occurances of each ngram.
-It uses those dataframes to calculate the probability of the next word for each of the ngram models.  for example if the input words are \"in the case of\"  The 5-gram dataframe 
-will be searched for all ngrams starting with \"in the case of\" and each match will be be assigned a probability equal to the number of occurances of that specific
+            the next word in the sequence."),
+                 p("The model uses a large percentage of the corpus, counts occurances of ngrams of sizes 2 through 5 and stores them with the counts in dataframes.
+ It uses those dataframes to calculate interpolated \"scores\" for various completion options.  For example if the input words are \"in the case of\"  The 5-gram dataframe 
+will be searched for all ngrams starting with \"in the case of\" and each match will be be assigned a score equal to the number of occurances of that specific
 ngram divided by the total number of 5-grams starting with these four words.  The same is done for the 4-gram data frame, the 3-gram dataframe, the 
-2-gram dataframe, and the 1-gram dataframe.  Finally each of those probabilities is multiplied by a lambda value that is proportional to the ngram size.
+2-gram dataframe, and the individual words in the corpus.  Finally each of those scores is multiplied by a lambda value that is proportional to the ngram size.
 The logic here is that a prediction from a 5-gram that matches the first 4 words is more likely to be correct and should be weighted higher than a prediction
 from the 2-gram dataframe."),
-                 p("Finally these computed \"scores\" are used to sort the results and present the top 3 to the user through the UI.  If fewer than three can be found then \"NA\" will show up."),
+                 p("Finally these computed \"scores\" are used to sort the results and present the top 3 likely completions to the user through the UI."),
                  p("This approach is known as \"Interpolation\" since all of the ngram models are considered.  Use of ngrams and \"Interpolation\" is really the first step 
-in trying to solve this problem.  From working with the corpus it quickly becomes apparent that there is a need to include some form of grammer modelling as well as 
-semantic modelling with this approach.  Language is based on gramatical and semantic patterns, not really on simple ngram patterns."),
-                 p(), p("Enter the start of the sentence and click \"Predict!\"")),
+in trying to solve this problem.  From working with the corpus it quickly becomes apparent that there is a need to include some form of grammer modeling as well as 
+semantic modeling with this approach.  Language is based on gramatical and semantic patterns, not really on simple ngram patterns."),
+                 p("When the program is loading it can take 30 seconds to load the dataframes the first time.  Please be patient."),
+                 p(), p(), p("Enter the start of the sentence and click \"Predict!\".  The results will show up on the \"Results\" tab, 
+and the word clouds and plots will show up on the respective tabs.")),
         
         tabPanel("Results",
                  
